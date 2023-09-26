@@ -12,6 +12,10 @@ public class Status {
     private Long id;
     private String name;
 
+    public Status(String name) {
+        this.name = name;
+    }
+
     public Status() {
     }
     public Status(Long id, String name) {

@@ -1,12 +1,14 @@
 package com.example.btvn22_09.service.impl;
+import com.example.btvn22_09.model.Status;
 import com.example.btvn22_09.model.Student;
+import com.example.btvn22_09.model.Subject;
 import com.example.btvn22_09.repository.IStudentRepository;
 import com.example.btvn22_09.service.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class StudentService implements IStudentService {
@@ -15,6 +17,20 @@ public class StudentService implements IStudentService {
     @Override
     public List<Student> findAll() {
         return iStudentRepository.findAll();
+    }
+
+
+    public List<Student> findStatus(Status status){
+        return iStudentRepository.findByStatus(status);
+    }
+    public List<Student> findAddress(String address){
+        return iStudentRepository.findByAddressContaining(address);
+    }
+    public List<Student> findGender(String gender){
+        return iStudentRepository.findByGender(gender);
+    }
+    public List<Student> findSubject(Subject subject){
+        return iStudentRepository.findBySubjects(subject);
     }
     public List<Student> findAllByName(String name) {
         return iStudentRepository.findStudentsByNameContaining(name);

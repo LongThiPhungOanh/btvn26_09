@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group 'com.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    junitVersion = '5.9.2'
+}
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+dependencies {
+    compileOnly('javax.servlet:javax.servlet-api:4.0.1')
+// thư viện hibernate-core
+    implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.6.10.Final'
+
+//spring
+    implementation 'org.springframework:spring-webmvc:5.3.23'
+
+//upload file
+    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+
+//DB
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.30'
+
+//JPA
+    implementation group: 'org.springframework.data', name: 'spring-data-jpa', version: '2.7.0'
+
+//Validation
+    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    implementation group: 'org.hibernate', name: 'hibernate-validator', version: '6.0.10.Final'
+
+//Web service-Json
+    implementation group: 'org.springframework', name: 'spring-tx', version: '5.3.23'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.2'
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+}
+
+test {
+    useJUnitPlatform()
+}

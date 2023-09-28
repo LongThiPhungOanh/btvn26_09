@@ -497,16 +497,9 @@ function updateSubjPost(index, oldSubj) {
             data: JSON.stringify(student),
             url: "http://localhost:8080/api/students/search",
             success: function (data) {
-                var str = '<div class="search-box">\n' +
-                    '    <div class="container text-center">\n' +
-                    '        <div class="form-group d-inline-block" style="max-width: 150px;">\n' +
-                    '            <label for="name" class="form-label">Search By Name</label>\n' +
-                    '            <input required style="width: 100%; text-align: center;" type="text" class="form-control" id="name" name="name">\n' +
-                    '        </div>\n' +
-                    '        <button style="vertical-align: middle;" class="btn btn-primary" onclick="searchByName()">Search</button>\n' +
-                    '    </div>\n' +
-                    '</div>\n' + ' <h2 style="text-align: center; margin-top: 10px">Sửa</h2>\n' +
-                    '<table style="margin: 0 auto; border-collapse: collapse; border: 1px; width: 85%" class="table table-hover">\n';
+                var str =
+                    '</div>\n' + ' <h2 style="text-align: center; margin-top: 10px">Kết quả tìm kiếm</h2>\n' +
+                    '<table style="margin: 0 auto; border-collapse: collapse; border: 1px; width: 98%" class="table table-hover">\n';
                 str += '<button onclick="createForm()" style="margin-left: 1px; margin-top: 30px" class="btn btn-primary">Thêm</button>';
                 str += '<tr style="margin-top: 500px">\n' +
                     '<th>#</th>\n' +
@@ -517,7 +510,7 @@ function updateSubjPost(index, oldSubj) {
                     '<th>Địa chỉ</th>\n' +
                     '<th>Trạng thái</th>\n' +
                     '<th>Môn học</th>\n' +
-                    '<th>Edit</th>\n' +
+                    '<th style="text-align: center" colspan="4">Thêm, sửa, xóa thông tin</th>\n' +
                     '</tr> ';
                 for (let i = 0; i < data.length; i++) {
                     str += '<tr>';
@@ -532,14 +525,20 @@ function updateSubjPost(index, oldSubj) {
                     for (let j = 0; j < data[i].subjects.length; j++) {
                         str += '<div>' + data[i].subjects[j].name + '</div>';
                     }
-                    str += '</td>';
-                    str += '<td><button class="btn btn-warning" onclick="update(' + data[i].id + ')">Sửa</button></td>\n' +
+                    str += '</td>' +
+                        '<td><button style="font-size: small; width: 100px; height: 45px; " ' +
+                        'class="btn btn-primary" onclick="createSubj(' + data[i].id + ')">Thêm môn</button></td>\n' +
+                        '<td><button style="font-size: small; width: 100px; height: 45px;" ' +
+                        'class="btn btn-warning" onclick="editSubj(' + data[i].id + ')">Sửa môn</button></td>\n' +
+                        '<td><button style="font-size: small; width: 100px; height: 45px;" ' +
+                        'class="btn btn-danger"" onclick="deleteSubInStudent(' + data[i].id + ')">Xóa môn</button></td>\n' +
+                        '<td><button style="font-size: small; width: 100px; height: 45px;" ' +
+                        'class="btn btn-warning" onclick="update(' + data[i].id + ')">Sửa t.tin</button></td>\n' +
                         '</tr>\n';
                 }
                 str += '</table>' +
-                    '  <button class="btn btn-info" onclick="showlist()">Back</button>'
+                    '  <button style="margin-top: 15px" class="btn btn-info" onclick="findIntegration()">Back</button>'
                 document.getElementById("show").innerHTML = str;
-
             }
         });
         event.preventDefault();
@@ -579,16 +578,16 @@ function updateSubjPost(index, oldSubj) {
                     '    <div class="mb-3">\n' +
                     '      <label for="status" class="form-label">Tình trạng</label>\n' +
                     '      <select class="form-select" id="status">\n' +
-                    '<option value="">-----------</option>'
+                    '<option value="-1">-----------</option>'
                 for (let i = 0; i < listStatus.length; i++) {
                     str += '<option value="' + listStatus[i].id + '">' + listStatus[i].name + '</option>\n'
                 }
                 str += '</select>\n' +
                     '    </div>\n' +
                     '<div class="mb-3">\n' +
-                    '      <label for="status" class="form-label">Môn hoc</label>\n' +
-                    '      <select class="form-select" id="status">\n' +
-                    '<option value="">------------</option>'
+                    '      <label for="subject" class="form-label">Môn hoc</label>\n' +
+                    '      <select class="form-select" id="subject">\n' +
+                    '<option value="-1">------------</option>'
                 for (let j = 0; j < listSubjects.length; j++) {
                     str += '<option value="' + listSubjects[j].id + '">' + listSubjects[j].name + '</option>\n'
                 }
@@ -596,7 +595,6 @@ function updateSubjPost(index, oldSubj) {
                     '    </div>\n' +
                     '</div>' +
                     '    <button class="btn btn-primary" type="submit" onclick="searchIntegratio()">Tìm kiếm</button>\n' +
-                    '    <button class="btn btn-secondary" type="reset">Xóa toàn bộ</button>\n' +
                     '  <button class="btn btn-info" onclick="showlist()">Back</button>'
                 document.getElementById("show").innerHTML = str;
             }
@@ -607,9 +605,8 @@ var name = $('#name').val();
 var gender = $('#gender').val();
 var address = $('#address').val();
 var status = $('#status').val();
-//     var status = '1';
 var subject = $('#subject').val();
-if (subject === 0){
+if (subject === "-1"){
     var obj = {
         name: name,
         gender: gender,
@@ -618,7 +615,7 @@ if (subject === 0){
             id: status
         }
     }
-} else {
+}else {
     var obj = {
         name: name,
         gender: gender,
@@ -626,9 +623,10 @@ if (subject === 0){
         status: {
             id: status
         },
-        subjects: [{
-            id: subject
-        }],
+        subjects : [{
+            id : subject
+        }
+        ]
     }
 }
     console.log(obj)
@@ -641,7 +639,7 @@ if (subject === 0){
         data: JSON.stringify(obj),
         url: "http://localhost:8080/api/students/searchIntegration",
         success:  function (data){
-            console.log(data + 123);
+            if (data.length > 0){
             var str = '<div class="search-box">\n' +
                 '</div>\n' + ' <h2 style="text-align: center; margin-top: 10px">Kết quả tìm kiếm</h2>\n' +
                 '<table style="margin: 0 auto; border-collapse: collapse; border: 1px; width: 98%" class="table table-hover">\n';
@@ -671,7 +669,8 @@ if (subject === 0){
                     str += '<div>' + data[i].subjects[j].name + '</div>';
                 }
                 str += '</td>' +
-                    '<td><button class="btn btn-primary" onclick="createSubj(' + data[i].id + ')">Thêm môn</button></td>\n' +
+                    '<td><button style="font-size: small; width: 100px; height: 45px; " ' +
+                    'class="btn btn-primary" onclick="createSubj(' + data[i].id + ')">Thêm môn</button></td>\n' +
                     '<td><button style="font-size: small; width: 100px; height: 45px;" ' +
                     'class="btn btn-warning" onclick="editSubj(' + data[i].id + ')">Sửa môn</button></td>\n' +
                     '<td><button style="font-size: small; width: 100px; height: 45px;" ' +
@@ -683,10 +682,14 @@ if (subject === 0){
             str += '</table>' +
                 '  <button style="margin-top: 15px" class="btn btn-info" onclick="findIntegration()">Back</button>'
             document.getElementById("show").innerHTML = str;
-        } ,
-        error : function (){
-            alert("not found!")
+        } else {
+               mess();
+            }
         }
+
     });
     event.preventDefault();
+}
+function mess(){
+    alert("No data returned!")
 }

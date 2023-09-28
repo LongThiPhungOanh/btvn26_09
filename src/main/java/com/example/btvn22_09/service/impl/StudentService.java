@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class StudentService implements IStudentService {
@@ -26,8 +27,8 @@ public class StudentService implements IStudentService {
     public List<Student> findStatus(Status status){
         return iStudentRepository.findByStatus(status);
     }
-    public List<Student> findSubject(Subject subject){
-        return iStudentRepository.findBySubjects(subject);
+    public List<Student> findSubject(Set<Subject> subject){
+        return iStudentRepository.findBySubjectsIn(subject);
     }
     public List<Student> findAllByName(String name) {
         return iStudentRepository.findStudentsByNameContaining(name);

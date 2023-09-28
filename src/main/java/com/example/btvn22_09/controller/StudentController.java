@@ -163,9 +163,45 @@ public class StudentController {
     public ResponseEntity<List<Student>> searchIntegration(@RequestBody Student student) {
         List<Student> list ;
         list = service.findAbc(student.getName(), student.getAddress(), student.getStatus(), student.getGender());
-
-
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        if (student.getStatus().getId() != -1) {
+            if (!list.isEmpty()) {
+                for (int i = 0; i < list.size(); i++) {
+                    if (!list.get(i).getStatus().getId().equals(student.getStatus().getId())) {
+                        list.remove(list.get(i));
+                        i--;
+                    }
+                }
+            }
+        } if(student.getSubjects().iterator().hasNext()) {
+            if (!list.isEmpty()) {
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).getSubjects().size() > 1) {
+                        boolean check = false;
+                        Set<Subject> subjects = list.get(i).getSubjects();
+                        for (Subject s: subjects) {
+                            if (s.getId().equals(student.getSubjects().iterator().next().getId())){
+                                check = true;
+                                break;
+                            }
+                        }
+                        if (!check){
+                            list.remove(list.get(i));
+                            i--;
+                        }
+                    } else {
+                        if (!list.get(i).getSubjects().iterator().next().getId().
+                                equals(student.getSubjects().iterator().next().getId())) {
+                            list.remove(list.get(i));
+                            i--;
+                        }
+                    }
+                }
+            }
+        } if (!list.isEmpty()){
+            return new ResponseEntity<>(list,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
     @PostMapping("/deleteSubjInStudent")
     public ResponseEntity<Void> deleteSubjInStudent(@RequestBody Student student) {

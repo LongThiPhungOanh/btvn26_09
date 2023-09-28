@@ -17,7 +17,7 @@ public interface IStudentRepository extends JpaRepository<Student, Long> {
 
     //List<Student> findByNameContainingIgnoreCaseAndAddressContainingIgnoreCaseAndGenderContainingIgnoreCaseAndStatus_IdOrStatusIsNull(String name, String address, String gender, Long status_Id);
     List<Student> findByNameContainingIgnoreCaseAndAddressContainingIgnoreCaseAndGenderContainingIgnoreCase(String name, String address, String gender);
-    List<Student> findBySubjects(Set<Subject> s);
+    List<Student> findBySubjectsIn(Set<Subject> subjects);
     @Query(value =
 "SELECT s.* FROM student s JOIN student_subject ss ON s.id = ss.student_id WHERE ss.subject_id = ?1",nativeQuery = true)
     List<Student> findBySubjects(Subject subject);

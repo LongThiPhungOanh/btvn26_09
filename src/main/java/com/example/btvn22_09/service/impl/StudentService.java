@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class StudentService implements IStudentService {
@@ -19,15 +18,13 @@ public class StudentService implements IStudentService {
         return iStudentRepository.findAll();
     }
 
+    public List<Student> findAbc(String name, String address,Status status, String gender){
+        return iStudentRepository.findByNameContainingIgnoreCaseAndAddressContainingIgnoreCaseAndGenderContainingIgnoreCase(name, address, gender);
+    }
+
 
     public List<Student> findStatus(Status status){
         return iStudentRepository.findByStatus(status);
-    }
-    public List<Student> findAddress(String address){
-        return iStudentRepository.findByAddressContaining(address);
-    }
-    public List<Student> findGender(String gender){
-        return iStudentRepository.findByGender(gender);
     }
     public List<Student> findSubject(Subject subject){
         return iStudentRepository.findBySubjects(subject);
@@ -51,4 +48,7 @@ public class StudentService implements IStudentService {
     public void update(Student s) {
         iStudentRepository.save(s);
     }
+//    public void delete(Long idStudent, Long idSubject){
+//        iStudentRepository.deleteInStudent(idStudent, idSubject);
+//    }
 }

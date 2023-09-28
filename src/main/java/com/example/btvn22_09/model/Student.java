@@ -1,7 +1,5 @@
 package com.example.btvn22_09.model;
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +17,7 @@ public class Student {
     private int age;
     private String gender;
     private String address;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "idStatus")
     private Status status;
     @ManyToMany(fetch = FetchType.EAGER)

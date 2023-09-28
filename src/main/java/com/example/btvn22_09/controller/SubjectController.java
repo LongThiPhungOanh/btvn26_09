@@ -1,5 +1,4 @@
 package com.example.btvn22_09.controller;
-import com.example.btvn22_09.model.Student;
 import com.example.btvn22_09.model.Subject;
 import com.example.btvn22_09.service.impl.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @CrossOrigin("*")

@@ -39,11 +39,12 @@ public class StudentController {
         List<Subject> list = subjectService.findAll();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
     @GetMapping("/findIntegration")
-    public ResponseEntity<List<Object>> findIntegration(){
+    public ResponseEntity<List<Object>> findIntegration() {
         List<Subject> listSubject = subjectService.findAll();
         List<Status> listStatus = statusService.findAll();
-        List<Object> objects  = new ArrayList<>();
+        List<Object> objects = new ArrayList<>();
         objects.add(listSubject);
         objects.add(listStatus);
         return new ResponseEntity<>(objects, HttpStatus.OK);
@@ -56,9 +57,10 @@ public class StudentController {
         } else {
             student.setGender("Nam");
         }
-            service.create(student);
-            return new ResponseEntity<>(HttpStatus.OK);
+        service.create(student);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @PostMapping("/addSubj")
     public ResponseEntity<List<Void>> addSubj(@RequestBody Student student) {
         Set<Subject> subjects = student.getSubjects();
@@ -66,11 +68,12 @@ public class StudentController {
         if (newStudent != null) {
             if (student.getSubjects().size() < 3) {
                 int count = 0;
-                for (Student s: service.findAll()) {
-                    if (s.getSubjects().equals(student.getSubjects())){
-                        count ++;
+                for (Student s : service.findAll()) {
+                    if (s.getSubjects().equals(student.getSubjects())) {
+                        count++;
                     }
-                } if (count < 10){
+                }
+                if (count < 10) {
                     Set<Subject> a = newStudent.getSubjects();
                     a.addAll(subjects);
                     newStudent.setSubjects(a);
@@ -86,22 +89,23 @@ public class StudentController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     @GetMapping("/edit/{id}")
-    public ResponseEntity<List<Object>> editStudent(@PathVariable Long id){
+    public ResponseEntity<List<Object>> editStudent(@PathVariable Long id) {
         List<Object> objects = new ArrayList<>();
         Student student = service.findOne(id);
-        if (student != null){
-        List<Status> list = statusService.findAll();
-        objects.add(student);
-        objects.add(list);
-        return new ResponseEntity<>(objects, HttpStatus.OK);
-    } else {
+        if (student != null) {
+            List<Status> list = statusService.findAll();
+            objects.add(student);
+            objects.add(list);
+            return new ResponseEntity<>(objects, HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/editSubj/{id}")
-        public ResponseEntity<Set<Subject>> getStudentSubject(@PathVariable Long id) {
+    public ResponseEntity<Set<Subject>> getStudentSubject(@PathVariable Long id) {
         Student student1 = service.findOne(id);
         if (student1 != null) {
             if (!student1.getSubjects().isEmpty()) {
@@ -109,81 +113,95 @@ public class StudentController {
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-        } else{
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-@PostMapping("/updateSubjects")
-public ResponseEntity<Void> update(@RequestBody List<Student> listStudent) {
-    Student oldStudent = listStudent.get(0);
-    List<Subject> oldSubList = new ArrayList<>(oldStudent.getSubjects());
-    Subject subjectDel = oldSubList.get(0);
-    Student newStudent = listStudent.get(1);
-    List<Subject> newSubList = new ArrayList<>(newStudent.getSubjects());
-    Subject subjectAdd = newSubList.get(0);
-    Student student = service.findOne(oldStudent.getId());
-    if (student != null) {
-        List<Subject> listSubject = new ArrayList<>(student.getSubjects());
-        listSubject.add(subjectService.findOne(subjectAdd.getId()));
-        int idxDel = 0;
-        for (int i = 0; i < listSubject.size(); i++) {
-            if(listSubject.get(i).getId().equals(subjectDel.getId())){
-                idxDel = i;
+
+    @PostMapping("/updateSubjects")
+    public ResponseEntity<Void> update(@RequestBody List<Student> listStudent) {
+        Student oldStudent = listStudent.get(0);
+        List<Subject> oldSubList = new ArrayList<>(oldStudent.getSubjects());
+        Subject subjectDel = oldSubList.get(0);
+        Student newStudent = listStudent.get(1);
+        List<Subject> newSubList = new ArrayList<>(newStudent.getSubjects());
+        Subject subjectAdd = newSubList.get(0);
+        Student student = service.findOne(oldStudent.getId());
+        if (student != null) {
+            List<Subject> listSubject = new ArrayList<>(student.getSubjects());
+            listSubject.add(subjectService.findOne(subjectAdd.getId()));
+            int idxDel = 0;
+            for (int i = 0; i < listSubject.size(); i++) {
+                if (listSubject.get(i).getId().equals(subjectDel.getId())) {
+                    idxDel = i;
+                }
             }
+            listSubject.remove(idxDel);
+            student.setSubjects(new HashSet<>(listSubject));
+            service.update(student);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        listSubject.remove(idxDel);
-        student.setSubjects(new HashSet<>(listSubject));
-        service.update(student);
-        return new ResponseEntity<>(HttpStatus.OK);
-    } else {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-}
 
     @GetMapping("/getSubj")
-    public ResponseEntity<List<Subject>> getSub(){
-        if (!subjectService.findAll().isEmpty()){
+    public ResponseEntity<List<Subject>> getSub() {
+        if (!subjectService.findAll().isEmpty()) {
             return new ResponseEntity<>(subjectService.findAll(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     @PostMapping("/search")
     public ResponseEntity<List<Student>> search(@RequestBody Student student) {
         return new ResponseEntity<>(service.findAllByName(student.getName()), HttpStatus.OK);
     }
-@PostMapping("/searchIntegration")
-public ResponseEntity<List<Student>> searchIntegration(@RequestBody Student student) {
 
-        List<Student> list = new ArrayList<>();
-    String name = student.getName();
-    Status status = student.getStatus();
-    Set<Subject> subjects = student.getSubjects();
-    Subject subject = subjects.iterator().next();
-    String address = student.getAddress();
-    String gender = student.getGender();
-        if (!Objects.equals(name, "")) {
-            list.addAll(service.findAllByName(name));
-        } else if (!address.isEmpty()) {
-            list.addAll(service.findAddress(address));
-        } else if (!gender.equals("0")) {
-            if (gender.equals("1")){
-                student.setGender("Nam");
-                list.addAll(service.findGender(student.getGender()));
-            } else {
-                student.setGender("Nữ");
-                list.addAll(service.findGender(student.getGender()));
+    @PostMapping("/searchIntegration")
+    public ResponseEntity<List<Student>> searchIntegration(@RequestBody Student student) {
+        List<Student> list ;
+        list = service.findAbc(student.getName(), student.getAddress(), student.getStatus(), student.getGender());
+
+
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+    @PostMapping("/deleteSubjInStudent")
+    public ResponseEntity<Void> deleteSubjInStudent(@RequestBody Student student) {
+        Long idStudent = student.getId();
+        Set<Subject> subjects = student.getSubjects();
+        Student existingStudent = service.findOne(idStudent);
+        Long idSubject = null;
+        if (!subjects.isEmpty()) {
+            Subject subject = subjects.iterator().next();
+            idSubject = subject.getId();
+        }
+        Subject existingSubject = subjectService.findOne(idSubject);
+        if (existingSubject != null && existingStudent != null) {
+            for (Subject s: existingStudent.getSubjects()) {
+                if (s.getId().equals(existingSubject.getId())){
+                    existingStudent.getSubjects().remove(s);
+                    break;
+                }
             }
-        } else if (status.getId() != 0) {
-            list.addAll(service.findStatus(status));
-        } else if (!subjects.isEmpty()) {
-            list.addAll(service.findSubject(subject));
+            service.update(existingStudent);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @DeleteMapping("/deleteAllSubjects")
+    public ResponseEntity<Void> deleteAll(@RequestBody Student s) {
+        Student student = service.findOne(s.getId());
+        if (student != null){
+            student.getSubjects().clear();
+            service.update(student);
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(list, HttpStatus.OK);
     }
-
 }
 
 

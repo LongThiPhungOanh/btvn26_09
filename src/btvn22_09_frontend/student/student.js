@@ -117,7 +117,7 @@ function showlist() {
                 '    </div>\n' +
                 '</div>\n' +
                 ' <h2 style="text-align: center; margin-top: 10px">Dnh sách</h2>\n' +
-                '<table style="margin: 0 auto; border-collapse: collapse; border: 1px; width: 85%" class="table table-hover">\n';
+                '<table style="margin: 0 auto; border-collapse: collapse; border: 1px; width: 98%" class="table table-hover">\n';
             str += '<button onclick="createForm()" style="margin-left: 10px; margin-top: 30px" class="btn btn-primary">Thêm</button>';
             str += '<a href="http://localhost:63343/btvn22_09/subject/listSubject.html?_ijt=ssfab7flsqpi3s74429872fhu7&_ij_reload=RELOAD_ON_SAVE" style="margin-left: 10px; margin-top: 30px" class="btn btn-primary">D.sách môn học</a>';
             str += '<tr style="margin-top: 500px">\n' +
@@ -146,11 +146,11 @@ function showlist() {
                 }
                 str += '</td>';
                 str += '<td><button style="font-size: small; width: 100px; height: 45px; " ' +
-                    'class="btn btn-warning" onclick="createSubj(' + data[i].id + ')">Thêm môn</button></td>\n' +
+                    'class="btn btn-primary" onclick="createSubj(' + data[i].id + ')">Thêm môn</button></td>\n' +
                     '<td><button style="font-size: small; width: 100px; height: 45px;" ' +
                     'class="btn btn-warning" onclick="editSubj(' + data[i].id + ')">Sửa môn</button></td>\n' +
                     '<td><button style="font-size: small; width: 100px; height: 45px;" ' +
-                    'class="btn btn-warning" onclick="deleteSubInStudent(' + data[i].id + ')">Xóa môn</button></td>\n' +
+                    'class="btn btn-danger"" onclick="deleteSubInStudent(' + data[i].id + ')">Xóa môn</button></td>\n' +
                     '<td><button style="font-size: small; width: 100px; height: 45px;" ' +
                     'class="btn btn-warning" onclick="update(' + data[i].id + ')">Sửa t.tin</button></td>\n' +
                     '</tr>\n';
@@ -243,9 +243,6 @@ function deleteOne(id){
     }
     event.preventDefault()
 }
-// function deleteAll(id){
-//
-// }
     function editSubj(id) {
         $.ajax({
             headers: {
@@ -557,8 +554,8 @@ function updateSubjPost(index, oldSubj) {
             type: "GET",
             url: "http://localhost:8080/api/students/findIntegration",
             success: function (data) {
-                var listStatus = data[0]
-                var listSubjects = data[1];
+                var listStatus = data[1]
+                var listSubjects = data[0];
                 var str = '<h1 style="text-align: center">Tìm kiếm học sinh</h1>\n' +
                     '<div style="width: 500px; margin: auto">' +
                     '    <div class="mb-3" style="">\n' +
@@ -569,9 +566,9 @@ function updateSubjPost(index, oldSubj) {
                     '    <div class="mb-3">\n' +
                     '      <label for="gender" class="form-label">Giới Tính</label>\n' +
                     '      <select class="form-select" id="gender">\n' +
-                    '        <option value="0">-----</option>\n' +
-                    '        <option value="1">Nam</option>\n' +
-                    '        <option value="2">Nữ</option>\n' +
+                    '        <option value="">-----</option>\n' +
+                    '        <option value="Nam">Nam</option>\n' +
+                    '        <option value="Nữ">Nữ</option>\n' +
                     '      </select>\n' +
                     '    </div>\n' +
                     '    <div class="mb-3">\n' +
@@ -580,20 +577,20 @@ function updateSubjPost(index, oldSubj) {
                     '             placeholder="Địa chỉ">\n' +
                     '    </div>\n' +
                     '    <div class="mb-3">\n' +
-                    '      <label for="status" class="form-label">Môn học</label>\n' +
+                    '      <label for="status" class="form-label">Tình trạng</label>\n' +
                     '      <select class="form-select" id="status">\n' +
-                    '<option value="' + 0 +'">-----------</option>'
+                    '<option value="">-----------</option>'
                 for (let i = 0; i < listStatus.length; i++) {
                     str += '<option value="' + listStatus[i].id + '">' + listStatus[i].name + '</option>\n'
                 }
                 str += '</select>\n' +
                     '    </div>\n' +
                     '<div class="mb-3">\n' +
-                    '      <label for="status" class="form-label">Tình trạng</label>\n' +
+                    '      <label for="status" class="form-label">Môn hoc</label>\n' +
                     '      <select class="form-select" id="status">\n' +
-                    '<option value="'+ 0 +'">------------</option>'
-                for (let i = 0; i < listSubjects.length; i++) {
-                    str += '<option value="' + listSubjects[i].id + '">' + listSubjects[i].name + '</option>\n'
+                    '<option value="">------------</option>'
+                for (let j = 0; j < listSubjects.length; j++) {
+                    str += '<option value="' + listSubjects[j].id + '">' + listSubjects[j].name + '</option>\n'
                 }
                 str += '</select>\n' +
                     '    </div>\n' +
@@ -610,6 +607,7 @@ var name = $('#name').val();
 var gender = $('#gender').val();
 var address = $('#address').val();
 var status = $('#status').val();
+//     var status = '1';
 var subject = $('#subject').val();
 if (subject === 0){
     var obj = {
@@ -646,7 +644,7 @@ if (subject === 0){
             console.log(data + 123);
             var str = '<div class="search-box">\n' +
                 '</div>\n' + ' <h2 style="text-align: center; margin-top: 10px">Kết quả tìm kiếm</h2>\n' +
-                '<table style="margin: 0 auto; border-collapse: collapse; border: 1px; width: 85%" class="table table-hover">\n';
+                '<table style="margin: 0 auto; border-collapse: collapse; border: 1px; width: 98%" class="table table-hover">\n';
             str += '<button onclick="createForm()" style="margin-left: 1px; margin-top: 30px" class="btn btn-primary">Thêm</button>';
             str += '<tr style="margin-top: 500px">\n' +
                 '<th>#</th>\n' +
@@ -657,7 +655,7 @@ if (subject === 0){
                 '<th>Địa chỉ</th>\n' +
                 '<th>Trạng thái</th>\n' +
                 '<th>Môn học</th>\n' +
-                '<th>Edit</th>\n' +
+                '<th style="text-align: center" colspan="4">Thêm, sửa, xóa thông tin</th>\n' +
                 '</tr> ';
             for (let i = 0; i < data.length; i++) {
                 str += '<tr>';
@@ -672,15 +670,23 @@ if (subject === 0){
                 for (let j = 0; j < data[i].subjects.length; j++) {
                     str += '<div>' + data[i].subjects[j].name + '</div>';
                 }
-                str += '</td>';
-                str += '<td><button class="btn btn-warning" onclick="update(' + data[i].id + ')">Sửa</button></td>\n' +
+                str += '</td>' +
+                    '<td><button class="btn btn-primary" onclick="createSubj(' + data[i].id + ')">Thêm môn</button></td>\n' +
+                    '<td><button style="font-size: small; width: 100px; height: 45px;" ' +
+                    'class="btn btn-warning" onclick="editSubj(' + data[i].id + ')">Sửa môn</button></td>\n' +
+                    '<td><button style="font-size: small; width: 100px; height: 45px;" ' +
+                    'class="btn btn-danger"" onclick="deleteSubInStudent(' + data[i].id + ')">Xóa môn</button></td>\n' +
+                    '<td><button style="font-size: small; width: 100px; height: 45px;" ' +
+                    'class="btn btn-warning" onclick="update(' + data[i].id + ')">Sửa t.tin</button></td>\n' +
                     '</tr>\n';
             }
             str += '</table>' +
-                '  <button class="btn btn-info" onclick="findIntegration()">Back</button>'
+                '  <button style="margin-top: 15px" class="btn btn-info" onclick="findIntegration()">Back</button>'
             document.getElementById("show").innerHTML = str;
         } ,
-        error : console.log("hihi")
+        error : function (){
+            alert("not found!")
+        }
     });
     event.preventDefault();
 }
